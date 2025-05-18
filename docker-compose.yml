@@ -1,0 +1,10 @@
+services:
+  weather-app:
+    build:
+      context: .
+      args:
+        WEATHER_API_KEY: ${WEATHER_API_KEY}
+    ports:
+      - "8080:8080"
+    environment:
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
