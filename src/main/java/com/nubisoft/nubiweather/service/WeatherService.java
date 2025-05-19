@@ -41,9 +41,17 @@ public class WeatherService {
                 .flatMap(this::getCurrent);
     }
 
+    public Mono<CurrentWeatherResponse> getRealtimeWeather(String city) {
+        return getCurrent(city);
+    }
+
     public Flux<ForecastWeatherResponse> getForecastWeather(int days) {
         return Flux.fromIterable(cities)
                 .flatMap(city -> getForecast(city, days));
+    }
+
+    public Mono<ForecastWeatherResponse> getForecastWeather(String city, int days) {
+        return getForecast(city, days);
     }
 
     public Mono<ForecastWeatherResponse> getForecast(String city, int days) {
@@ -108,7 +116,7 @@ public class WeatherService {
         return switch (dataType) {
             case "/current.json" -> Duration.ofMinutes(15);
             case "/forecast.json" -> Duration.ofMinutes(60);
-            default -> Duration.ofMinutes(30);
+            default -> Duration.ofMinutes(1);
         };
     }
 }
