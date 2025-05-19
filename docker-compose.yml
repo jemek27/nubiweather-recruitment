@@ -1,4 +1,10 @@
 services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+
   weather-app:
     build:
       context: .
@@ -8,3 +14,4 @@ services:
       - "8080:8080"
     environment:
       - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - SPRING_REDIS_HOST=redis
