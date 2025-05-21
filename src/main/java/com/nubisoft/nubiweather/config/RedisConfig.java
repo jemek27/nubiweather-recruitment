@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -53,5 +54,21 @@ public class RedisConfig {
                 .value(serializer)
                 .build();
         return new ReactiveRedisTemplate<>(cf, context);
+    }
+
+    @Bean
+    public ReactiveRedisTemplate<String, Integer> redisIntegerTemplate(
+            ReactiveRedisConnectionFactory cf) {
+
+        StringRedisSerializer keySer = new StringRedisSerializer();
+        GenericToStringSerializer<Integer> valSer =
+                new GenericToStringSerializer<>(Integer.class);
+
+        RedisSerializationContext<String, Integer> ctx =
+                RedisSerializationContext.<String, Integer>newSerializationContext(keySer)
+                        .value(valSer)
+                        .build();
+
+        return new ReactiveRedisTemplate<>(cf, ctx);
     }
 }
